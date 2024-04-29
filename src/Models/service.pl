@@ -4,7 +4,7 @@
 :- use_module(library(prosqlite)).
 
 create_service_table:-
-  connect_to_database(Conn),
+  get_db_connection(Conn),
   sqlite_query(Conn, "CREATE TABLE IF NOT EXISTS service (
     id INTEGER PRIMARY KEY AUTOINCREMENT,
     price REAL NOT NULL,
@@ -12,5 +12,4 @@ create_service_table:-
     description TEXT NOT NULL,
     reservation_id INTEGER NOT NULL,
     FOREIGN KEY (reservation_id) REFERENCES reservation(id));",
-    _),
-    sqlite_disconnect(Conn).
+    _).
