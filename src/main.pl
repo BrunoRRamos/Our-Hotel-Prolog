@@ -4,5 +4,7 @@
 
 main:-
   install,
-  create_tables.
+  get_db_connection(Conn),
+  create_tables,
+  sqlite_disconnect(Conn).
   % halt.
