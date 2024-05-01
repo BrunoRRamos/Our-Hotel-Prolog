@@ -1,4 +1,13 @@
-:- use_module(login_actions)
+:- module(login_menu, [loginLoop/0]).
+:- use_module("../../Models/user.pl").
+
+login(Email, Password, Users):- 
+    number(user(Email, _, _, Password, true, _, _), Users),
+    write("Login Successful").
+
+register(Email, FirstName, LastName, Password, Role):-
+    insert(Email, FirstName, LastName, Password, true, false, Role),
+    write("Register Successful").
 
 action("1"):- 
     write("\nInsert your Email: "),
@@ -22,13 +31,12 @@ action("2"):-
 
 action("3"):- write("Implementar exit").%exit
 
-action(_):- write("Invalid Option").
 
 loginLoop():-
-    write("\nAvailable commands:").
-    write("1.  Login").
-    write("2.  Register").
-    write("3.  exit - Quit the program").
-    write("\nEnter a command: ").
-    read(Option).
+    write("\nAvailable commands:\n"),
+    write("1.  Login\n"),
+    write("2.  Register\n"),
+    write("3.  exit - Quit the program\n"),
+    write("\nEnter a command: \n"),
+    read(Option),
     action(Option).
