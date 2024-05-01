@@ -1,6 +1,7 @@
 :- use_module(init).
 :- use_module(database).
 :- use_module("models/create").
+:- use_module(library(prosqlite)).
 
 main:-
   install,
