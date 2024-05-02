@@ -1,4 +1,4 @@
-:- module(models_user, [create_user_table/0, get_all/1, insert/8]).
+:- module(models_user, [create_user_table/0, get_all/1, insert/8, get_one/2]).
 
 :- use_module("../database.pl").
 :- use_module(library(prosqlite)).
@@ -18,6 +18,7 @@ create_user_table:-
     role TEXT CHECK(role IN ('ADMIN', 'CLIENT')) NOT NULL);",
     _).
 
+% Users é variavel resposta
 get_all(Users) :-
   get_db_connection(_),
   findall(
@@ -29,13 +30,14 @@ get_all(Users) :-
       Users
   ).
 
+% User é variavel resposta
 get_one(User, Email):-
   get_db_connection(_),
   user(Email, FName, LName, Pass, IsActiveInt, BlockR, Role),
   to_boolean(IsActiveInt, IsActive),
   User = user(Email, FName, LName, Pass, IsActive, BlockR, Role).
 
-
+% Row é variavel resposta
 insert(Email, FName, LName, Pass, Active, BlockR, Role, Row):-
   get_db_connection(Conn),
   format(atom(SQL), "INSERT INTO user(email, first_name, last_name, password, is_active, block_reason, role)
