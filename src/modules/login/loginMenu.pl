@@ -1,10 +1,13 @@
 :- module(login_menu, [loginLoop/0]).
 :- use_module("../../Models/user.pl").
 
-login(User, Email):- 
+verifyPassword(user(_, _, _, Pass, _, _, _), Password):-
+    atom_string(Pass, Exit), Exit == Password.
+
+login(User, Email, Pass):- 
     get_one(User, Email),
-    write(User),
-    write("Login Successful").
+    verifyPassword(User, Pass) -> write(User), write("Login Successful");
+    write("Incorrect password").
 
 register(Email, FirstName, LastName, Password, Role):-
     get_one(_, Email) -> write("User already exists");
@@ -16,7 +19,7 @@ register(Email, FirstName, LastName, Password, Role):-
 action("1"):-
     write('Enter your email: '), read_string(user_input, '\n', '\r', _, Email),
     write('Enter your password: '), read_string(user_input, '\n', '\r', _, Pass),
-    login(_, Email).
+    login(_, Email, Pass).
     % FUNÇÃO DE MENU DE CLIENT
 
 action("2"):- 
