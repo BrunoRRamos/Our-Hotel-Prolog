@@ -8,6 +8,9 @@ main:-
   install,
   get_db_connection(Conn),
   create_tables,
-  sqlite_disconnect(Conn),
-  loginLoop().
+  write("╔══════════════════════════════════════════════════════════════════════════════╗\n"),
+  write("║                      WELCOME TO OURHOTEL, ENJOY YOUR STAY!                   ║\n"),
+  write("╚══════════════════════════════════════════════════════════════════════════════╝\n"),
+  loginLoop(),
+  sqlite_disconnect(Conn).
   % halt.
