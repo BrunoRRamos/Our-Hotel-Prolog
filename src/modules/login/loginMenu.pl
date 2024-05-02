@@ -7,14 +7,16 @@ login(User, Email):-
     write("Login Successful").
 
 register(Email, FirstName, LastName, Password, Role):-
+    get_one(_, Email) -> write("User already exists");
     insert(Email, FirstName, LastName, Password, true, "", Role, Result),
     write(Result),
-    write("Register Successful").
+    write("Register Successful"),
+    halt. 
 
 action("1"):-
     write('Enter your email: '), read_string(user_input, '\n', '\r', _, Email),
     write('Enter your password: '), read_string(user_input, '\n', '\r', _, Pass),
-    login(User, Email).
+    login(_, Email).
     % FUNÇÃO DE MENU DE CLIENT
 
 action("2"):- 
