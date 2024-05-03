@@ -1,4 +1,4 @@
-:- module(clientMenu, [clientMenu/0]).
+:- module(clientMenu, [client_menu/1]).
 :- use_module("./checkinMenu.pl").
 :- use_module("../util/util.pl").
 
@@ -17,7 +17,7 @@ option("4"):-
 option("5"):-
     exit().
 
-clientMenu():-
+client_menu(User):-
     write("\nAvailable commands:\n"),
     write("1.  Reservations\n"),
     write("2.  Service\n"),
