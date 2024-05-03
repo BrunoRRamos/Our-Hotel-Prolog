@@ -15,7 +15,7 @@ register(Email, FirstName, LastName, Password, Role):-
     get_one(_, Email) -> write("User already exists");
     insert(Email, FirstName, LastName, Password, true, "", Role, Result),
     write(Result),
-    write("Register Successful")
+    write("Register Successful").
 
 action("1"):-
     write('Enter your email: '), read_string(user_input, '\n', '\r', _, Email),
