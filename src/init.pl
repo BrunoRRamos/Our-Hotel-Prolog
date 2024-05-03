@@ -1,4 +1,3 @@
-:- module(init, [install/0]).
+:- use_module("models/create").
 
-install :-
-  pack_install([prosqlite], [insecure(true), interactive(false)]).
+:-pack_install([prosqlite], [insecure(true), interactive(false)]), create_tables, halt.
