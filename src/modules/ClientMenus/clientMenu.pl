@@ -1,10 +1,18 @@
 :- module(clientMenu, [clientMenu/0]).
 :- use_module("../util/util.pl").
 
-% option("1"):-
-% option("2"):-
-% option("3"):-
-% option("4"):-
+option("1"):-
+    write("Reservations menu here").
+
+option("2"):-
+    write("Service menu here").
+
+option("3"):-
+    write("Check-In / Check-Out menu here").
+
+option("4"):-
+    write("Chat menu here").
+
 option("5"):-
     exit().
 
