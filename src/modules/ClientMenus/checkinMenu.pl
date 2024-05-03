@@ -1,3 +1,4 @@
+:- module(checkInMenu, [checkInMenu/0]).
 :- use_module("../../Models/reservation.pl").
 
 option("1"):-
@@ -10,12 +11,12 @@ option("2"):-
     write("checkout").
 
 option("3"):-
-    write("go back")
+    write("go back").
 
 checkInMenu():-
-    write("\nAvailable commands:")
-    write("1.  Check-In\n")
-    write("2.  Check-Out\n")
-    write("3.  Go back\n")
+    write("\nAvailable commands:\n"),
+    write("1.  Check-In\n"),
+    write("2.  Check-Out\n"),
+    write("3.  Go back\n"),
     write('Enter a command: '), read_string(user_input, '\n', '\r', _, Option),
     option(Option).
