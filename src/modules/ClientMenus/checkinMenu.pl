@@ -2,16 +2,22 @@
 :- use_module("../../Models/reservation.pl").
 :- use_module("../../Models/room.pl").
 
+verifyRoom(RoomNumber, Result):-
+    get_one_room(Room, RoomNumber) -> Result is "\nCheck-Out Sucess !"; write("\nRoom not found"), chatMenu().
+
 option("1"):-
-    write('Enter the room number: '), read_string(user_input, '\n', '\r', _, RoomNumber),
+    write('\nEnter the room number: '), read_string(user_input, '\n', '\r', _, RoomNumber),
+    atom_number(RoomNumber, Number),
     get_one(Reservation, RoomNumber),
     write(Reservation),
     write("\n Check-In Sucess !").
 
 option("2"):-
-    write('Enter the room number: '), read_string(user_input, '\n', '\r', _, RoomNumber),
+    write('\nEnter the room number: '), read_string(user_input, '\n', '\r', _, RoomNumber),
+    atom_number(RoomNumber, Number),
+    verifyRoom(RoomNumber, Result),
     update_room(RoomNumber, _, 'AVAILABLE', _),
-    write("Check-Out Sucess !").
+    write(Result).
 
 option("3"):-
     write("go back").
