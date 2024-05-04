@@ -6,9 +6,9 @@ verifyRoom(RoomNumber, Result):-
     get_one_room(Room, RoomNumber) -> Result is "\nCheck-Out Sucess !"; write("\nRoom not found"), chatMenu().
 
 option("1"):-
-    write('\nEnter the room number: '), read_string(user_input, '\n', '\r', _, RoomNumber),
-    atom_number(RoomNumber, Number),
-    get_one(Reservation, RoomNumber),
+    write('\nEnter the reservation number: '), read_string(user_input, '\n', '\r', _, RoomNumber),
+    atom_number(ReservationId, Number),
+    get_one(Reservation, ReservationId),
     write(Reservation),
     write("\n Check-In Sucess !").
 
