@@ -1,5 +1,6 @@
 :- module(clientMenu, [client_menu/1]).
 :- use_module("./checkinMenu.pl").
+:- use_module("./chatMenu.pl").
 :- use_module("../util/util.pl").
 
 option("1"):-
@@ -12,7 +13,7 @@ option("3"):-
     checkInMenu().
 
 option("4"):-
-    write("Chat menu here").
+    chatMenu().
 
 option("5"):-
     exit().
