@@ -1,5 +1,6 @@
 :- module(checkInMenu, [checkInMenu/0]).
 :- use_module("../../Models/reservation.pl").
+:- use_module("../../Models/room.pl").
 
 option("1"):-
     write('Enter the room number: '), read_string(user_input, '\n', '\r', _, RoomNumber),
@@ -8,7 +9,9 @@ option("1"):-
     write("\n Check-In Sucess !").
 
 option("2"):-
-    write("checkout").
+    write('Enter the Room Number: '), read_string(user_input, '\n', '\r', _, RoomNumber),
+    update_room(RoomNumber, _, 'AVAILABLE', _),
+    write("Check-Out Sucess !").
 
 option("3"):-
     write("go back").
