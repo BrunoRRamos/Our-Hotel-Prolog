@@ -9,7 +9,7 @@ option("1"):-
     write("\n Check-In Sucess !").
 
 option("2"):-
-    write('Enter the Room Number: '), read_string(user_input, '\n', '\r', _, RoomNumber),
+    write('Enter the room number: '), read_string(user_input, '\n', '\r', _, RoomNumber),
     update_room(RoomNumber, _, 'AVAILABLE', _),
     write("Check-Out Sucess !").
 
