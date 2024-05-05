@@ -54,7 +54,7 @@ delete_room(Id):-
 
 print_room(Room):-
   write("--------------------------------------------------\n"),
-  room(Id, DailyRate, Status, Occupancy),
+  Room = room(Id, DailyRate, Status, Occupancy),
   write("Room ID: "), write(Id), write("\n"),
   write("Daily Rate: "), write(DailyRate), write("\n"),
   write("Status: "), write(Status), write("\n"),
