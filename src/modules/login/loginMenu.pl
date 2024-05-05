@@ -10,16 +10,16 @@ verifyPassword(user(_, _, _, Pass, _, _, _), Password):-
 sendToMenu(user(_,_,_,_,_,_,Role)):-
     atom_string(Role, Exit),
     Exit == "CLIENT" -> 
-    write("CLIENT MENU\n"),
+    write("\nCLIENT MENU\n"),
     client_menu(User);
-    write("ADMIN MENU\n"),
+    write("\nADMIN MENU\n"),
     admin_menu(User).
 
 login(User, Email, Pass):- 
     get_one_user(User, Email) -> (
     \+ verifyPassword(User, Pass) -> write("\nIncorrect password\n"), loginLoop();
     get_one_user(User, Email),
-    write("Login Successful\n"),
+    write("\nLogin Successful\n"),
     sendToMenu(User)); write("\nUser not exists\n"), loginLoop().
 
 register(Email, FirstName, LastName, Password, Role):-
