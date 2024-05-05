@@ -1,6 +1,7 @@
 :- module(checkInMenu, [checkInMenu/0]).
 :- use_module("../../Models/reservation.pl").
 :- use_module("../../Models/room.pl").
+:- use_module("./clientMenu.pl").
 :- use_module("./../login/loginMenu.pl").
 
 getRoomStatusReserved(room(_, _, Status, _)):-
@@ -24,17 +25,17 @@ option("1"):-
     string_to_atom(ReservationId, Number),
     get_one_reservation(Reservation, ReservationId) -> (
     formatReservedRoom(Reservation),
-    write("\n Check-In Sucess !"), loginLoop()); write("Reservation not found"), checkInMenu().
+    write("\n Check-In Sucess !"), client_menu(User)); write("Reservation not found"), checkInMenu().
 
 option("2"):-
     write('\nEnter the reservation number: '), read_string(user_input, '\n', '\r', _, ReservationId),
     string_to_atom(ReservationId, Number),
     get_one_reservation(Reservation, ReservationId) -> (
     formatFreeRoom(Reservation),
-    write("\nCheck-Out Done"), loginLoop()); write("Reservation not found"), checkInMenu().
+    write("\nCheck-Out Done"), client_menu(User)); write("Reservation not found"), checkInMenu().
 
 option("3"):-
-    loginLoop().
+    client_menu(User).
 
 checkInMenu():-
     write("\nAvailable commands:\n"),
