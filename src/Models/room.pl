@@ -6,7 +6,8 @@
   update_room/4,
   delete_room/1,
   list_rooms/1,
-  print_room/1
+  print_room/1,
+  update_status_room/2
   ]).
 
 :- use_module("../database.pl").
@@ -45,6 +46,12 @@ update_room(Id, DailyRate, Status, Occupancy):-
   get_db_connection(Conn),
   format(atom(SQL), "UPDATE room SET daily_rate = ~w, status = '~w', occupancy = ~w WHERE id = ~w",
                      [DailyRate, Status, Occupancy, Id]),
+  sqlite_query(Conn,SQL, _).
+
+update_status_room(Id, Status):-
+  get_db_connection(Conn),
+  format(atom(SQL), "UPDATE room SET status = '~w' WHERE id = ~w",
+                      [Status, Id]),
   sqlite_query(Conn,SQL, _).
 
 delete_room(Id):-

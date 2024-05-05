@@ -11,23 +11,25 @@ sendToMenu(User):-
     User = user(_,_,_,_,_,_,Role),
     atom_string(Role, Exit),
     Exit == "CLIENT" -> 
-    write("CLIENT MENU\n"),
+    write("\nCLIENT MENU\n"),
     client_menu(User);
-    write("ADMIN MENU\n"),
+    write("\nADMIN MENU\n"),
     admin_menu(User).
 
 login(User, Email, Pass):- 
-    get_one(User, Email),
-    \+ verifyPassword(User, Pass) -> write("Incorrect password\n");
-    get_one(User, Email),
-    write("Login Successful\n"),
-    sendToMenu(User).
+    get_one_user(User, Email) -> (
+    \+ verifyPassword(User, Pass) -> write("\nIncorrect password\n"), loginLoop();
+    get_one_user(User, Email),
+    write("\nLogin Successful\n"),
+    sendToMenu(User)); write("\nUser not exists\n"), loginLoop().
 
 register(Email, FirstName, LastName, Password, Role):-
-    get_one(_, Email) -> write("User already exists");
+    get_one_user(_, Email) -> write("\nUser already exists\n"), loginLoop();
     insert(Email, FirstName, LastName, Password, true, "", Role, Result),
     write(Result),
-    write("Register Successful").
+    write("\nRegister Successful\n"),
+    get_one_user(User, Email),
+    sendToMenu(User).
 
 option("1"):-
     write('Enter your email: '), read_string(user_input, '\n', '\r', _, Email),

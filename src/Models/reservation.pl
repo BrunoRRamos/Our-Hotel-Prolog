@@ -1,6 +1,6 @@
 :- module(models_reservation, [
   create_reservation_table/0, 
-  get_one/2, 
+  get_one_reservation/2, 
   get_all_reservations/1, 
   get_available_rooms/4, 
   insert_reservation/7, 
@@ -30,11 +30,6 @@ create_reservation_table:-
     FOREIGN KEY (user_id) REFERENCES user(email));",
     _).
 
-get_one(Reservation, RoomId):-
-  get_db_connection(_),
-  reservation(Id, RoomId, UserId, Start, End, Rating, BlockServices),
-  to_boolean(BlockServices, BlockServicesInt),
-  Reservation = reservation(RoomId, UserId, Start, End, Rating, BlockServicesInt).
 
 get_one_reservation(Reservation, ReservationId):-
   get_db_connection(_),
@@ -106,5 +101,5 @@ get_available_rooms(Start, End, AvailableRooms, CurrentRoom):-
     AvailableRooms).
 
   overlap(Start, End, reservation(_, _, _, ReservationStart, ReservationEnd, _, _)) :-
-    Start < ReservationEnd, End > ReservationStart.
+    Start =< ReservationEnd, End >= ReservationStart.
 
