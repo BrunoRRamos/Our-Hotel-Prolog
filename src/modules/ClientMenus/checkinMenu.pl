@@ -3,19 +3,27 @@
 :- use_module("../../Models/room.pl").
 :- use_module("./../login/loginMenu.pl").
 
-getRoomStatus(room(_, _, Status, _)):-
+getRoomStatusReserved(room(_, _, Status, _)):-
     Status == 'RESERVED'.
+
+getRoomStatusFree(room(_, _, Status, _)):-
+    Status == 'AVAILABLE'.
 
 formatFreeRoom(reservation(_, RoomId, _, _, _, _, _)):-
     get_one_room(Room, RoomId),
-    getRoomStatus(Room) -> (
+    getRoomStatusReserved(Room) -> (
     update_status_room(RoomId, "AVAILABLE")); write("Invalid reservation number"), checkInMenu().
+
+formatReservedRoom(reservation(_, RoomId, _, _, _, _, _)):-
+    get_one_room(Room, RoomId),
+    getRoomStatusFree(Room) -> (
+    update_status_room(RoomId, "RESERVED")); write("Invalid reservation number"), checkInMenu().
 
 option("1"):-
     write('\nEnter the reservation number: '), read_string(user_input, '\n', '\r', _, ReservationId),
     string_to_atom(ReservationId, Number),
     get_one_reservation(Reservation, ReservationId) -> (
-    write(Reservation),
+    formatReservedRoom(Reservation),
     write("\n Check-In Sucess !"), loginLoop()); write("Reservation not found"), checkInMenu().
 
 option("2"):-
