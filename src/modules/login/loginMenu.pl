@@ -17,10 +17,10 @@ sendToMenu(user(_,_,_,_,_,_,Role)):-
 
 login(User, Email, Pass):- 
     get_one_user(User, Email) -> (
-    \+ verifyPassword(User, Pass) -> write("Incorrect password\n");
+    \+ verifyPassword(User, Pass) -> write("\nIncorrect password\n"), loginLoop();
     get_one_user(User, Email),
     write("Login Successful\n"),
-    sendToMenu(User)); write("\nUser not exists\n").
+    sendToMenu(User)); write("\nUser not exists\n"), loginLoop().
 
 register(Email, FirstName, LastName, Password, Role):-
     get_one_user(_, Email) -> write("\nUser already exists\n"), loginLoop();
