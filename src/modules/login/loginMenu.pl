@@ -7,7 +7,8 @@
 verifyPassword(user(_, _, _, Pass, _, _, _), Password):-
     atom_string(Pass, Exit), Exit == Password.
 
-sendToMenu(user(_,_,_,_,_,_,Role)):-
+sendToMenu(User):-
+    User = user(_,_,_,_,_,_,Role),
     atom_string(Role, Exit),
     Exit == "CLIENT" -> 
     write("\nCLIENT MENU\n"),
