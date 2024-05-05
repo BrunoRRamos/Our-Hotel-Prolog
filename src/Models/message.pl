@@ -1,6 +1,7 @@
-:- module(models_message, [create_message_table/0, get_messages_by_sender/2, get_messages_by_recipient/2]).
+:- module(models_message, [get_all_messages/1, insert/4, create_message_table/0, get_messages_by_sender/1, get_messages_by_recipient/1]).
 
 :- use_module("../database.pl").
+:-use_module("./user.pl").
 :- use_module(library(prosqlite)).
 
 create_message_table:-
@@ -15,39 +16,52 @@ create_message_table:-
     FOREIGN KEY (recipient_email) REFERENCES user(email));",
     _).
 
-get_all(Messages):-
+get_all_messages(Messages):-
   get_db_connection(_),
   findall(
-    message(SenderEmail, RecipientEmail, Message, SentDate),
+    message(Id, SenderEmail, RecipientEmail, Message, SentDate),
+    message(Id, SenderEmail, RecipientEmail, Message, SentDate),
     Messages).
 
-% comapare_email_sender(message(SenderEmail, _, _, _), SenderEmailInput):-
-%   atom_string(SenderEmail, Exit) == SenderEmailInput.
+% verifyEmail(Email):-
+%   get_one_user(User, Email).
 
-% comapare_email_recipient(message(_, RecipientEmail, _, _), RecipientEmailInput):-
-%   atom_string(SenderEmail, Exit) == RecipientEmailInput.
+listMessages([]):-
+  write("List Ended\n").
 
-compare_email_sender(Email, message(SenderEmail, _, _, _)) :-
-  Email == SenderEmail.
+printMessage(MessageActual):-
+  write("--------------------------------------------------\n"),
+  MessageActual = message(Id, SenderEmail, RecipientEmail, Message, SentDate),
+  write("Sender email: "), write(SenderEmail), write("\n"),
+  write("Recipient email: "), write(RecipientEmail), write("\n"),
+  write("Message: "), write(Message), write("\n"),
+  write("SentDate: "), write(SentDate), write("\n"),
+  write("--------------------------------------------------\n").
 
-get_messages_by_sender(Email, Messages) :-
-  get_all(AllMessages),
-  include(compare_email_sender(Email), AllMessages, Messages).
+listSenderMessages([], SenderTarget):-
+  write("\n").
 
-get_messages_by_recipient(Email, Messages) :-
-  get_all(AllMessages),
-  include(comapare_email_recipient(Email), AllMessages, Messages).
+listSenderMessages([MessageActual|Rest], SenderTarget):-
+  MessageActual = message(Id, SenderEmail, RecipientEmail, Message, SentDate),
+  atom_string(SenderTarget, Exit), Exit == SenderTarget -> printMessage(MessageActual);
+  listSenderMessages(Rest, SenderTarget).
 
-% filter_email_sender(SenderEmail, MensagensInput):-
+listRecipientMessages([MessageActual|Rest], RecipientTarget):-
+  MessageActual = message(Id, SenderEmail, RecipientEmail, Message, SentDate),
+  atom_string(RecipientEmail, Exit), Exit == RecipientTarget -> printMessage(MessageActual);
+  listRecipientMessages(Rest, RecipientTarget).
 
-% filter_email_recipient(RecipientEmail, MensagensInput):-
+get_messages_by_sender(SenderTarget):-
+  get_all_messages(AllMessages),
+  listSenderMessages(AllMessages, SenderTarget).
 
-get_all_from_email(Messages, Email):-
-  get_all(Messages).
+get_messages_by_recipient(RecipientTarget):-
+  get_all_messages(AllMessages),
+  listRecipientMessages(AllMessages, RecipientTarget).
 
 insert(SenderEmail, RecipientEmail, Message, SentDate):-
   get_db_connection(Conn),
   format(atom(SQL), "INSERT INTO message(sender_email, recipient_email, message, sentDate)
-                     VALUES(~w, ~w, ~w, ~w)",
+                     VALUES('~w', '~w', '~w', '~w')",
                      [SenderEmail, RecipientEmail, Message, SentDate]),
   sqlite_query(Conn,SQL, Row).

@@ -3,14 +3,14 @@
 :- use_module("./clientMenu.pl").
 
 option("1"):- 
-    write('Enter your Email: '), read_string(user_input, '\n', '\r', _, SenderEmail),
-    get_messages_by_recipient(RecipientEmail, Messages),
-    write(Messages).
+    write('Enter your Email: '), read_string(user_input, '\n', '\r', _, RecipientEmail),
+    get_messages_by_recipient(RecipientEmail),
+    chatMenu().
 
 option("2"):- 
     write('Enter your Email: '), read_string(user_input, '\n', '\r', _, SenderEmail),
-    get_messages_by_sender(SenderEmail, Messages),
-    write(Messages).
+    get_messages_by_sender(SenderEmail),
+    chatMenu().
 
 option("3"):- 
     write('Enter your Email: '), read_string(user_input, '\n', '\r', _, SenderEmail),
@@ -18,7 +18,8 @@ option("3"):-
     write('Enter the message: '), read_string(user_input, '\n', '\r', _, Message),
     write('Enter today date: '), read_string(user_input, '\n', '\r', _, SentDate),
     insert(SenderEmail, RecipientEmail, Message, SentDate),
-    write("Message Sent !").
+    write("Message Sent !"),
+    chatMenu().
 
 option("4"):- 
     client_menu().
