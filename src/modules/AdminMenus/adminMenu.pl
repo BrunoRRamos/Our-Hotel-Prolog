@@ -3,6 +3,7 @@
 :- use_module("../util/util.pl").
 :- use_module("./roomMenu.pl").
 :- use_module("./reviewMenu.pl").
+:- use_module("./serviceMenu.pl").
 
 option("1"):-
   write("Users menu here").
@@ -12,7 +13,8 @@ option("2"):-
   room_menu(User).
 
 option("3"):-
-  write("Services menu here").
+  write("Services menu here\n"),
+  service_menu(User).
 
 option("4"):-
   write("Hotel Review menu here\n"),
