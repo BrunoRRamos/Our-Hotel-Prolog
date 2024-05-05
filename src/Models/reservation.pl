@@ -1,4 +1,4 @@
-:- module(models_reservation, [create_reservation_table/0, get_one/2]).
+:- module(models_reservation, [create_reservation_table/0, get_one_reservation/2]).
 
 :- use_module("../database.pl").
 :- use_module(library(prosqlite)).
@@ -20,8 +20,8 @@ create_reservation_table:-
     FOREIGN KEY (user_id) REFERENCES user(email));",
     _).
 
-get_one(Reservation, RoomId):-
+get_one_reservation(Reservation, ReservationId):-
   get_db_connection(_),
-  reservation(RoomId, UserId, Start, End, Rating, BlockServices),
+  reservation(ReservationId, RoomId, UserId, Start, End, Rating, BlockServices),
   to_boolean(BlockServices, BlockServicesInt),
-  Reservation = reservation(RoomId, UserId, Start, End, Rating, BlockServicesInt).
+  Reservation = reservation(ReservationId, RoomId, UserId, Start, End, Rating, BlockServicesInt).
