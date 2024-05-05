@@ -1,10 +1,10 @@
 :- module(chatMenu, [chatMenu/0]).
 :- use_module("../../Models/message.pl").
-: use_module("./clientMenu.pl")
+:- use_module("./clientMenu.pl").
 
 option("1"):- 
     write('Enter your Email: '), read_string(user_input, '\n', '\r', _, SenderEmail),
-    get_messages_by_recipien(RecipientEmail, Messages),
+    get_messages_by_recipient(RecipientEmail, Messages),
     write(Messages).
 
 option("2"):- 

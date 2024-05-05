@@ -16,17 +16,18 @@ sendToMenu(user(_,_,_,_,_,_,Role)):-
     admin_menu(User).
 
 login(User, Email, Pass):- 
-    get_one(User, Email),
+    get_one_user(User, Email) -> (
     \+ verifyPassword(User, Pass) -> write("Incorrect password\n");
-    get_one(User, Email),
+    get_one_user(User, Email),
     write("Login Successful\n"),
-    sendToMenu(User).
+    sendToMenu(User)); write("\nUser not exists\n").
 
 register(Email, FirstName, LastName, Password, Role):-
-    get_one(_, Email) -> write("User already exists");
+    get_one_user(_, Email) -> write("\nUser already exists\n"), loginLoop();
     insert(Email, FirstName, LastName, Password, true, "", Role, Result),
     write(Result),
-    write("Register Successful"),
+    write("\nRegister Successful\n"),
+    get_one_user(User, Email),
     sendToMenu(User).
 
 option("1"):-

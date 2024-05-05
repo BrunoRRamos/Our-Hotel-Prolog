@@ -1,4 +1,4 @@
-:- module(models_user, [create_user_table/0, get_all/1, insert/8, get_one/2]).
+:- module(models_user, [create_user_table/0, get_all/1, insert/8, get_one_user/2]).
 
 :- use_module("../database.pl").
 :- use_module(library(prosqlite)).
@@ -31,7 +31,7 @@ get_all(Users) :-
   ).
 
 % User é variavel resposta
-get_one(User, Email):-
+get_one_user(User, Email):-
   get_db_connection(_),
   user(Email, FName, LName, Pass, IsActiveInt, BlockR, Role),
   to_boolean(IsActiveInt, IsActive),

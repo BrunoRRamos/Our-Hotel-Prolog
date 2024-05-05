@@ -1,4 +1,4 @@
-:- module(models_message, [create_message_table/0, get_messages_by_sender/2], get_messages_by_recipien/2).
+:- module(models_message, [create_message_table/0, get_messages_by_sender/2, get_messages_by_recipient/2]).
 
 :- use_module("../database.pl").
 :- use_module(library(prosqlite)).
@@ -34,7 +34,7 @@ get_messages_by_sender(Email, Messages) :-
   get_all(AllMessages),
   include(compare_email_sender(Email), AllMessages, Messages).
 
-get_messages_by_recipien(Email, Messages) :-
+get_messages_by_recipient(Email, Messages) :-
   get_all(AllMessages),
   include(comapare_email_recipient(Email), AllMessages, Messages).
 
