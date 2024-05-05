@@ -18,25 +18,29 @@ sendToMenu(User):-
 
 login(User, Email, Pass):- 
     get_one_user(User, Email) -> (
-    \+ verifyPassword(User, Pass) -> write("\nIncorrect password\n"), loginLoop();
+    \+ verifyPassword(User, Pass) -> write("\nIncorrect password\n"), press_to_continue;
     get_one_user(User, Email),
     write("\nLogin Successful\n"),
-    sendToMenu(User)); write("\nUser not exists\n"), loginLoop().
+    press_to_continue,
+    sendToMenu(User)); write("\nUser not exists\n"), press_to_continue.
 
 register(Email, FirstName, LastName, Password, Role):-
-    get_one_user(_, Email) -> write("\nUser already exists\n"), loginLoop();
+    get_one_user(_, Email) -> write("\nUser already exists\n");
     insert(Email, FirstName, LastName, Password, true, "", Role, Result),
     write(Result),
     write("\nRegister Successful\n"),
     get_one_user(User, Email),
+    press_to_continue,
     sendToMenu(User).
 
 option("1"):-
+    tty_clear,
     write('Enter your email: '), read_string(user_input, '\n', '\r', _, Email),
     write('Enter your password: '), read_string(user_input, '\n', '\r', _, Pass),
     login(_, Email, Pass).
 
 option("2"):- 
+    tty_clear,
     write('Enter your email: '), read_string(user_input, '\n', '\r', _, Email),
     write('Enter your first name: '), read_string(user_input, '\n', '\r', _, FName),
     write('Enter your last name: '), read_string(user_input, '\n', '\r', _, LName),
@@ -44,12 +48,17 @@ option("2"):-
     register(Email, FName, LName, Pass, "CLIENT").
 
 option("3"):- 
+    tty_clear,
     exit().
 
+option(_):-true.
+
 loginLoop():-
+    tty_clear,
     write("\nAvailable commands:\n"),
     write("1.  Login\n"),
     write("2.  Register\n"),
-    write("3.  exit - Quit the program\n"),
+    write("3.  Exit\n"),
     write('Enter a command: '), read_string(user_input, '\n', '\r', _, Option),
-    option(Option).
+    option(Option),
+    loginLoop.

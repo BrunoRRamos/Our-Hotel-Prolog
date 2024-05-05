@@ -24,6 +24,8 @@ option("3"):-
 option("4"):- 
     client_menu().
 
+option(_):-true.
+
 chatMenu():-
     write("\nAvailable commands:\n"),
     write("1.  View recived messages\n"),

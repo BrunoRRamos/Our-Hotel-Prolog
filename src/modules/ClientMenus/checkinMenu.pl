@@ -3,6 +3,7 @@
 :- use_module("../../Models/room.pl").
 :- use_module("./clientMenu.pl").
 :- use_module("./../login/loginMenu.pl").
+:- use_module("./../util/util.pl").
 
 getRoomStatusReserved(room(_, _, Status, _)):-
     Status == 'RESERVED'.
@@ -13,31 +14,45 @@ getRoomStatusFree(room(_, _, Status, _)):-
 formatFreeRoom(reservation(_, RoomId, _, _, _, _, _)):-
     get_one_room(Room, RoomId),
     getRoomStatusReserved(Room) -> (
-    update_status_room(RoomId, "AVAILABLE")); write("Invalid reservation number"), checkInMenu().
+    update_status_room(RoomId, "AVAILABLE")).
 
 formatReservedRoom(reservation(_, RoomId, _, _, _, _, _)):-
     get_one_room(Room, RoomId),
     getRoomStatusFree(Room) -> (
-    update_status_room(RoomId, "RESERVED")); write("Invalid reservation number"), checkInMenu().
+    update_status_room(RoomId, "RESERVED")).
 
 option("1"):-
+    tty_clear,
     write('\nEnter the reservation number: '), read_string(user_input, '\n', '\r', _, ReservationId),
     string_to_atom(ReservationId, Number),
-    get_one_reservation(Reservation, ReservationId) -> (
-    formatReservedRoom(Reservation),
-    write("\n Check-In Sucess !"), client_menu(User)); write("Reservation not found"), checkInMenu().
+    get_one_reservation(Reservation, ReservationId) -> 
+    (
+        write("\nCheck-In Successfull!\n"), 
+        formatReservedRoom(Reservation),
+        press_to_continue
+    ); 
+    write("Reservation not found"), press_to_continue.
 
 option("2"):-
+    tty_clear,
     write('\nEnter the reservation number: '), read_string(user_input, '\n', '\r', _, ReservationId),
     string_to_atom(ReservationId, Number),
-    get_one_reservation(Reservation, ReservationId) -> (
-    formatFreeRoom(Reservation),
-    write("\nCheck-Out Done"), client_menu(User)); write("Reservation not found"), checkInMenu().
+    get_one_reservation(Reservation, ReservationId) -> 
+    (
+        write("\nCheck-Out Done!\n"), 
+        formatFreeRoom(Reservation),
+        press_to_continue
+    ); 
+    write("Reservation not found"),
+    press_to_continue.
 
 option("3"):-
-    client_menu(User).
+    tty_clear.
+
+option(_):-true.
 
 checkInMenu():-
+    tty_clear,
     write("\nAvailable commands:\n"),
     write("1.  Check-In\n"),
     write("2.  Check-Out\n"),

@@ -66,5 +66,5 @@ parse_room_status(Input, Status):-
     false.
 
 press_to_continue:-
-  write("Press any key to go back"),
-  get_char(_).
+  write("Press any key to continue"),
+  get_single_char(_).
