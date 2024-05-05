@@ -5,23 +5,29 @@
 :- use_module("./reviewMenu.pl").
 
 option("1"):-
+  tty_clear,
   write("Users menu here").
 
 option("2"):-
+  tty_clear,
   write("Rooms menu here\n"),
   room_menu(User).
 
 option("3"):-
+  tty_clear,
   write("Services menu here").
 
 option("4"):-
+  tty_clear,
   write("Hotel Review menu here\n"),
   review_menu(User).
 
 option("5"):-
+  tty_clear,
   exit().
 
 admin_menu(User) :-
+  tty_clear,
   write('Available commands:\n'),
   write('1. Users\n'),
   write('2. Rooms\n'),
