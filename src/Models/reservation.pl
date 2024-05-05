@@ -101,5 +101,5 @@ get_available_rooms(Start, End, AvailableRooms, CurrentRoom):-
     AvailableRooms).
 
   overlap(Start, End, reservation(_, _, _, ReservationStart, ReservationEnd, _, _)) :-
-    Start < ReservationEnd, End > ReservationStart.
+    Start =< ReservationEnd, End >= ReservationStart.
 

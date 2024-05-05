@@ -31,25 +31,30 @@ option("2", User):-
 option("3", User):-
   User = user(UserId, _, _, _, _, _, _),
 
-  parse_input("Enter the id of the reservation to cancel: ", _, atom_number, ReservationId),
-  get_one_reservation(Reservation, ReservationId),
+  tty_clear,
+  parse_input("Enter the id of the reservation to cancel: ", Input, atom_number, ReservationId),
 
-  Reservation = reservation(_, _, UserIdRes, _, _, _, _),
-  atom_string(UserId, UserIdRes),
-  parse_input("Would you like to cancel the reservation? (y/n) ", _, parse_boolean, Cancel),
+  Input \= "q",
+  (
+    get_one_reservation(Reservation, ReservationId) ->
+    Reservation = reservation(_, _, UserIdRes, _, _, _, _),
+    atom_string(UserId, UserIdRes),
+    parse_input("Would you like to cancel the reservation? (y/n) ", _, parse_boolean, Cancel),
 
-  (Cancel -> 
-    delete_reservation(ReservationId),
-    write("Reservation cancelled successfully!\n\n"),
+    (Cancel -> 
+      delete_reservation(ReservationId),
+      write("Reservation cancelled successfully!\n\n"),
+      press_to_continue
+    ; 
+      write("Reservation not cancelled.\n\n"),
+      press_to_continue,
+      fail
+    );
+
+    tty_clear,
+    write("Reservation not found!\n\n"),
     press_to_continue
-  ; 
-    write("Reservation not cancelled.\n\n"),
-    press_to_continue,
-    fail
-  );
-  % tty_clear,
-  write("Reservation not found!\n\n"),
-  press_to_continue.
+  ).
 
 
 option("5", _):-true.
@@ -61,6 +66,7 @@ reservation_create_form(User):-
   parse_input("Enter an end date (YYYY-MM-DD): ",_, parse_date, End),
   date_time_stamp(Start, StartTimestamp),
   date_time_stamp(End, EndTimestamp),
+
   check_dates(StartTimestamp, EndTimestamp),
 
   parse_input("Block room service? (y/n) ", _, parse_boolean, BlockServices),
@@ -68,8 +74,8 @@ reservation_create_form(User):-
   get_available_rooms(StartTimestamp, EndTimestamp, Rooms, _),
   select_room(Rooms, SelectedRoom),
   
-  format_time(atom(StartStr), '%FT%T%z', StartTimestamp),
-  format_time(atom(EndStr), '%FT%T%z', EndTimestamp),
+  format_time(atom(StartStr), '%F', Start),
+  format_time(atom(EndStr), '%F', End),
 
   insert_reservation(SelectedRoom, UserId, StartStr, EndStr, 'NULL', BlockServices, ReservationId),
 
@@ -80,12 +86,11 @@ reservation_create_form(User):-
 
 reservation_edit_form(User):-
   User = user(UserId, _, _, _, _, _, _),
-  parse_input("Enter the id of the reservation to edit: ", _, atom_number, ReservationId),
+  parse_input("Enter the id of the reservation to edit: ", Input, atom_number, ReservationId),
 
-  get_one_reservation(Reservation, ReservationId), 
-
+  Input \= "q",
   (
-    get_one_reservation(Reservation, ReservationId), 
+    (get_one_reservation(Reservation, ReservationId), 
     Reservation = reservation(_, RoomId, UserIdRes, ReservationStartStr, ReservationEndStr, _, _), atom_string(UserIdRes, UserId)) ->
       tty_clear,
       write("Reservation found!\n\n"),
@@ -109,18 +114,19 @@ reservation_edit_form(User):-
       ((StartTimestamp \= ReservationStartTimestamp; EndTimestamp \= ReservationEndTimestamp) -> 
         get_available_rooms(StartTimestamp, EndTimestamp, Rooms, RoomId),
         select_room(Rooms, SelectedRoom)
-      ),
+      ; true),
 
       parse_optional_input("Block room service? (y/n) ", _, parse_boolean, BlockServices),
 
-      format_time(atom(StartStr), '%FT%T%z', StartTimestamp),
-      format_time(atom(EndStr), '%FT%T%z', EndTimestamp),
+      format_time(atom(StartStr), '%F', Start),
+      format_time(atom(EndStr), '%F', End),
 
       update_reservation(ReservationId, SelectedRoom, UserId, StartStr, EndStr, _, BlockServices),
       write("Your reservation was edited successfully!\n\n");
 
     tty_clear,
-    write("Reservation not found!\n\n").
+    write("Reservation not found!\n\n")
+  ).
 
 select_room(Rooms, SelectedRoom):-
   ( Rooms = [] ->

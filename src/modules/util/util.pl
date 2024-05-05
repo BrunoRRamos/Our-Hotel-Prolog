@@ -33,7 +33,7 @@ optionalInput(Input):-
 
 parse_date(DateStr, DateStruct):-
     parse_time(DateStr, Stamp),
-    stamp_date_time(Stamp, DateStruct, local).
+    stamp_date_time(Stamp, DateStruct, 'UTC').
 
 input(Input):-
     read_line_to_string(user_input, Line),
