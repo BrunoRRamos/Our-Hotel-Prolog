@@ -9,9 +9,10 @@
    update_room/4,
    list_rooms/1,
    print_room/1]).
-:- use_module("../util/util.pl", [input/2, optionalInput/3]).
+:- use_module("../util/util.pl").
 
 option("1"):-
+  tty_clear,
   write("Add room to hotel\n"),
   write("Enter daily rate: "), input(DailyRate, room_menu(User)),
   write("Enter occupancy: "), input(Occupancy, room_menu(User)),
@@ -20,22 +21,32 @@ option("1"):-
   write("\nRoom Created Successfully\n").
 
 option("2"):-
+  tty_clear,
   write("Edit room"),
   get_all_rooms(Rooms),
   list_rooms(Rooms),
   write("\n"), 
-  write("Enter room id: "), input(Id, room_menu(User)),
-  get_one_room(Room, Id),
-  room(Id, DailyRate, Status, Occupancy),
-  write("Selected room: \n"), print_room(Room), write("\n"),
-  write("Enter daily rate: "), optionalInput(InputDailyRate, DailyRate, room_menu(User)),
-  write("Enter occupancy: "), optionalInput(InputOccupancy, Occupancy, room_menu(User)),
-  write("Enter status:(A,B) "), optionalInput(InputStatus, Status, room_menu(User)),
-  (InputStatus = "A" -> InputStatus = "AVAILABLE"; InputStatus = "BLOCKED"),
-  update_room(Id, InputDailyRate, InputStatus, InputOccupancy),
-  write("Room updated successfully\n").
+  parse_input("Enter the number of the room to edit: ", Input, atom_number, RoomId),
+  Input \= "q",
+  (
+    get_one_room(Room, RoomId) ->
+    write("Room found\n"),
+    print_room(Room),
+    write("\n"),
+
+    parse_optional_input("Enter daily rate: (Press enter to skip) ", DailyRateInput, atom_number, DailyRate),
+    parse_optional_input("Enter occupancy: (Press enter to skip) ", OccupancyInput, atom_number, Occupancy),
+
+    parse_input("Block room? (y/n) ", _, parse_room_status, Status),
+
+    update_room(RoomId, DailyRate, Status, Occupancy),
+    write("Room updated successfully\n")
+  ;
+    write("Room not found\n")
+  ).
 
 option("3"):-
+  tty_clear,
   write("Delete room\n"),
   get_all_rooms(Rooms),
   list_rooms(Rooms),
@@ -45,16 +56,20 @@ option("3"):-
   write("Room deleted successfully\n").
 
 option("4"):-
+  tty_clear,
   write("List rooms"),
   get_all_rooms(Rooms),
   list_rooms(Rooms),
-  write("\n").
+  write("\n"),
+  press_to_continue.
 
 option("5"):-
+  tty_clear,
   write("exit - back to admin menu\n"),
   admin_menu(User).
 
 room_menu(User):-
+  tty_clear,
   write('Available commands:\n'),
   write('1. Add room to hotel\n'),
   write('2. Edit room\n'),
