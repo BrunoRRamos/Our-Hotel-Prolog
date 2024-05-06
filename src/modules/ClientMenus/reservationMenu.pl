@@ -3,9 +3,9 @@
 :- use_module(library(yall)).
 :- use_module(library(time)).
 :- use_module("../util/util.pl").
-:- use_module("../../models/reservation.pl").
-:- use_module("../../models/room.pl").
-:- use_module("../../models/service.pl").
+:- use_module("../../Models/reservation.pl").
+:- use_module("../../Models/room.pl").
+:- use_module("../../Models/roomService.pl").
 
 reservationMenu(User):-
   tty_clear,

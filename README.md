@@ -12,3 +12,8 @@ Projeto de um sistema de gerenciamento para hoteis desenvolvido em Prolog na dis
    ```shell
     > swipl -s src/main.pl -g main
    ```
+4. Você pode iniciar usando nosso usuário admin como padrão:
+   ```shell
+    > email: adm@gmail.com
+    > password: 123
+   ```
