@@ -44,11 +44,14 @@ option("3"):-
     ),
     Ratings),
     length(Ratings, Len),
+    ( Len > 1 ->
     sum_list(Ratings, Sum),
     Avg is Sum / Len,
     write("The average rating is "),
     write(Avg),
-    write(".\n\n"),
+    write(".\n\n")
+  );
+  write("There is no average classification\n\n"),
   press_to_continue.
 
 option("4"):-
@@ -181,6 +184,9 @@ option("7"):-
   ),
   press_to_continue.
 
+option("8"):- true.
+option(_):- true.
+
 review_menu(User) :-
   tty_clear,
   write('Available commands:\n'),
@@ -191,7 +197,7 @@ review_menu(User) :-
   write('5. Best rooms\n'),
   write('6. Last month reservations\n'),
   write('7. This month reservations\n'),
-  write('8. Exit\n'),
+  write('8. Go back\n'),
   write('Enter a command: '), read_string(user_input, '\n', '\r', _, Option),
-  option(Option),
+  option(Option);
   review_menu(User).
