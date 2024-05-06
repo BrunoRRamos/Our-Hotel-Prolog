@@ -9,7 +9,6 @@
     delete_service/1
 ]).
 :- use_module("../util/util.pl").
-:- use_module("../../Models/reservation.pl").
 :- use_module("./adminMenu").
 
 
@@ -67,7 +66,7 @@ option("3", Conn) :-
       write("Service not deleted.\n\n"),
       service_menu(Conn)
     );
-    write("Reservation not found!\n\n"),
+    write("Service not found!\n\n"),
     press_to_continue,
     service_menu(Conn).
 
