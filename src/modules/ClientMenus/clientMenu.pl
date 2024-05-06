@@ -13,11 +13,13 @@ option("2", _):-
 option("3", _ ):-
     checkInMenu().
 
-option("4", _ ):-
-    chatMenu().
+option("4", User):-
+    chatMenu(User).
 
 option("5", _):-
     exit().
+
+option(_):-true.
 
 client_menu(User):-
     tty_clear,
