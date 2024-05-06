@@ -113,6 +113,8 @@ option("4", User):-
 
 option("5", _):-true.
 
+option(_):-true.
+
 print_service(Service):-
   Service = service(Id, Price, _, Description, _),
   format('~w ~w ~`-t~30+ $~2f\n', [Id, Description, Price]).
