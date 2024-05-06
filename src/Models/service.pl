@@ -54,27 +54,9 @@ get_all_services(Services):-
     Services
   ).
 
-% deve ser adicionado em roomService
-    get_all_services(Services):-
-      get_db_connection(_),
-      findall(
-        service(Id, Price, Type, Description, ReservationId),
-        service(Id, Price, Type, Description, ReservationId),
-        Services
-      ).
-
   get_service(ServiceId, Service):-
     get_db_connection(_),
     service(ServiceId, Price, Type, Description),
     Service = service(ServiceId, Price, Type, Description).
   
-
-/*adicionado em roomService
-get_services_by_reservation(ReservationId, Services):-
-  get_all_services(S),
-
-  findall(
-    Service, 
-    (member(Service, S), service(_, _, _, _, ReservationId) = Service), 
-    Services
-    ).
+  

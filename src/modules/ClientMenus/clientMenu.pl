@@ -3,12 +3,15 @@
 :- use_module("./chatMenu.pl").
 :- use_module("../util/util.pl").
 :- use_module("./reservationMenu.pl").
+:- use_module("./roomServiceMenu.pl").
+
 
 option("1", User):-
     reservationMenu(User).
 
-option("2", _):-
-    write("Service menu here").
+option("2", User):-
+    write("Service menu here"),
+    room_service_menu(User).
 
 option("3", _ ):-
     checkInMenu().

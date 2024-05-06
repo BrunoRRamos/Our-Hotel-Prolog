@@ -5,7 +5,7 @@
 :- use_module("../util/util.pl").
 :- use_module("../../Models/reservation.pl").
 :- use_module("../../Models/room.pl").
-:- use_module("../../Models/service.pl").
+:- use_module("../../Models/roomService.pl").
 
 reservationMenu(User):-
   tty_clear,

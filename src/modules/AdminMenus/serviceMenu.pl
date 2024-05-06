@@ -6,8 +6,7 @@
     insert_service/3,
     get_service/2,
     update_service/4,
-    delete_service/1,
-    get_all_services/2
+    delete_service/1
 ]).
 :- use_module("../util/util.pl").
 :- use_module("../../Models/reservation.pl").
