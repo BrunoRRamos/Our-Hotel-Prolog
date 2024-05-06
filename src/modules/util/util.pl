@@ -1,4 +1,4 @@
-:- module(util, [exit/0, input/2, optionalInput/3, parse_date/2, parse_input/4, parse_optional_input/4, press_to_continue/0]).
+:- module(util, [exit/0, input/2, optionalInput/3, parse_date/2, parse_input/4, parse_optional_input/4, press_to_continue/0, parse_boolean/2, parse_room_status/2 ]).
 
 :-use_module("../AdminMenus/roomMenu.pl").
 :-use_module("../ClientMenus/reservationMenu.pl").
@@ -24,10 +24,10 @@ input(Input, GoBack):-
 optionalInput(Input, OldValue, GoBack):-
     read_string(user_input, '\n', '\r', _, Input),
     (Input = "" -> Input = OldValue; true),
-    (Input = "q" -> GoBack; true).
+    (Input = "q" -> call(GoBack); true).
 
 optionalInput(Input):-
-    read_string(user_input, '\n', '\r', _, Line),
+    read_line_to_string(user_input, Line),
     Line \= "q",
     (Line = "" -> true; Input = Line).
 
@@ -52,7 +52,7 @@ parse_optional_input(Prompt, Input,  Parser, Parsed):-
     optionalInput(Input),
     (Input = "" -> true; 
     (call(Parser, Input, Parsed) -> true; 
-    write("Invalid input, please try again\n\n"), 
+    write("Invalid input, please try again\n\n"),
     parse_optional_input(Prompt, _,  Parser, Parsed))).
 
 parse_boolean(Input, Bool):- 
@@ -60,6 +60,11 @@ parse_boolean(Input, Bool):-
   Input == "n", Bool = false;
   false.
 
+parse_room_status(Input, Status):-
+    Input = "y", Status = "BLOCKED";
+    Input = "n", Status = "AVAILABLE";
+    false.
+
 press_to_continue:-
-  write("Press any key to go back"),
-  get_char(_).
+  write("Press any key to continue"),
+  get_single_char(_).

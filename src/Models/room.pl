@@ -44,8 +44,17 @@ get_one_room(Room, Id):-
 
 update_room(Id, DailyRate, Status, Occupancy):-
   get_db_connection(Conn),
-  format(atom(SQL), "UPDATE room SET daily_rate = ~w, status = '~w', occupancy = ~w WHERE id = ~w",
-                     [DailyRate, Status, Occupancy, Id]),
+  findall(
+    SQLFragment,
+    (
+      (nonvar(DailyRate), format(atom(SQLFragment), "daily_rate = ~w", [DailyRate]));
+      (nonvar(Occupancy), format(atom(SQLFragment), "occupancy = ~w", [Occupancy]));
+      (nonvar(Status), format(atom(SQLFragment), "status = '~w'", [Status]))
+    ),
+    SQLFragments
+  ),
+  atomic_list_concat(SQLFragments, ', ', SQLSetClause),
+  format(atom(SQL), "UPDATE room SET ~w WHERE id = ~w;", [SQLSetClause, Id]),
   sqlite_query(Conn,SQL, _).
 
 update_status_room(Id, Status):-

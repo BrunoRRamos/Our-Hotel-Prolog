@@ -5,6 +5,7 @@
 :- use_module("../util/util.pl").
 :- use_module("../../models/reservation.pl").
 :- use_module("../../models/room.pl").
+:- use_module("../../models/service.pl").
 
 reservationMenu(User):-
   tty_clear,
@@ -56,8 +57,67 @@ option("3", User):-
     press_to_continue
   ).
 
+option("4", User):-
+  tty_clear,
+  User = user(UserId, _, _, _, _, _, _),
+
+  parse_input("Enter the id of the reservation: ", Input, atom_number, ReservationId),
+
+  Input \= "q",
+  ( 
+    get_one_reservation(Reservation, ReservationId), 
+    Reservation = reservation(_, RoomId, UserIdRes, StartStr, EndStr, _, _), 
+    atom_string(UserIdRes, UserId) -> 
+
+    parse_time(StartStr, Start),
+    parse_time(EndStr, End),
+    stamp_date_time(Start, StartDate, 'UTC'),
+    stamp_date_time(End, EndDate, 'UTC'),
+
+    get_one_room(Room, RoomId),
+    Room = room(_, DailyRate, _, Occupancy),
+    Stay is (End - Start) / (60 * 60 * 24),
+    StayTotal is Stay * DailyRate,
+
+    get_services_by_reservation(ReservationId, Services),
+    findall(Price, (member(service(_, Price, _, _, _), Services)), Prices),
+    sum_list(Prices, ServicesTotal),
+
+    format("\n~`#t Reservation ~`#t~40|\n"),
+
+    format_time(atom(StartFormatted), '%d/%m/%Y', StartDate),
+    format_time(atom(EndFormatted), '%d/%m/%Y', EndDate),
+    format("Start: ~w ~t End: ~w~40|\n", [StartFormatted, EndFormatted]),
+    format("Room: ~w \nPrice: $~2f/ night\n", [RoomId, DailyRate]),
+    format("Occupancy: ~w\n", [Occupancy]),
+
+    format("\n~`-t Receipt ~`-t~40|\n"),
+
+    format("\n~`#t Items ~`#t~40|\n"),
+    format("0 Room ~w stay ~`-t~30+ $~2f x~0f\n", [RoomId, DailyRate, Stay]),
+    forall(member(Service, Services), print_service(Service)),
+
+    format("~n~`#t Details ~`#t~40|~n"),
+    format("Services ~`-t~30+ $~2f\n", [ServicesTotal]),
+    format("Accommodations ~`-t~30+ $~2f\n", [StayTotal]),
+
+    format("\nTotal ~`-t~30+ $~2f\n\n", [ServicesTotal + StayTotal]),
+
+    press_to_continue;
+
+    tty_clear,
+    write("Reservation not found!\n\n"),
+    press_to_continue
+  ).
+
 
 option("5", _):-true.
+
+option(_):-true.
+
+print_service(Service):-
+  Service = service(Id, Price, _, Description, _),
+  format('~w ~w ~`-t~30+ $~2f\n', [Id, Description, Price]).
 
 reservation_create_form(User):-
   User = user(UserId, _, _, _, _, _, _),
