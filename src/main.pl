@@ -10,6 +10,5 @@ main:-
   write("║                      WELCOME TO OURHOTEL, ENJOY YOUR STAY!                   ║\n"),
   write("╚══════════════════════════════════════════════════════════════════════════════╝\n"),
   loginLoop(),
-  roomService_loop(),
   sqlite_disconnect(Conn).
   % halt.
