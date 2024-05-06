@@ -23,9 +23,6 @@ get_all_messages(Messages):-
     message(Id, SenderEmail, RecipientEmail, Message, SentDate),
     Messages).
 
-% verifyEmail(Email):-
-%   get_one_user(User, Email).
-
 listMessages([]):-
   write("List Ended\n").
 
@@ -35,29 +32,31 @@ printMessage(MessageActual):-
   write("Sender email: "), write(SenderEmail), write("\n"),
   write("Recipient email: "), write(RecipientEmail), write("\n"),
   write("Message: "), write(Message), write("\n"),
-  write("SentDate: "), write(SentDate), write("\n"),
+
+  parse_time(SentDate, TimeStamp),
+  stamp_date_time(TimeStamp, DateTime, 'UTC'),
+  format_time(string(FormattedDate), "%d-%m-%Y %H:%M", DateTime),
+  write("Sent: "), write(FormattedDate), write("\n"),
+
   write("--------------------------------------------------\n").
 
-listSenderMessages([], SenderTarget):-
-  write("\n").
+get_messages_by_sender(Sender):-
+  get_db_connection(_),
+  findall(
+    message(Id, Sender, RecipientEmail, Message, SentDate),
+    message(Id, Sender, RecipientEmail, Message, SentDate), 
+  Messages),
+  (Messages = [] -> write("No messages here!\n\n"); 
+  forall(member(Message, Messages), printMessage(Message))).
 
-listSenderMessages([MessageActual|Rest], SenderTarget):-
-  MessageActual = message(Id, SenderEmail, RecipientEmail, Message, SentDate),
-  atom_string(SenderTarget, Exit), Exit == SenderTarget -> printMessage(MessageActual);
-  listSenderMessages(Rest, SenderTarget).
-
-listRecipientMessages([MessageActual|Rest], RecipientTarget):-
-  MessageActual = message(Id, SenderEmail, RecipientEmail, Message, SentDate),
-  atom_string(RecipientEmail, Exit), Exit == RecipientTarget -> printMessage(MessageActual);
-  listRecipientMessages(Rest, RecipientTarget).
-
-get_messages_by_sender(SenderTarget):-
-  get_all_messages(AllMessages),
-  listSenderMessages(AllMessages, SenderTarget).
-
-get_messages_by_recipient(RecipientTarget):-
-  get_all_messages(AllMessages),
-  listRecipientMessages(AllMessages, RecipientTarget).
+get_messages_by_recipient(Recipient):-
+  get_db_connection(_),
+  findall(
+    message(Id, Sender, Recipient, Message, SentDate),
+    message(Id, Sender, Recipient, Message, SentDate), 
+  Messages),
+  (Messages = [] -> write("No messages here!\n\n"); 
+  forall(member(Message, Messages), printMessage(Message))).
 
 insert(SenderEmail, RecipientEmail, Message, SentDate):-
   get_db_connection(Conn),
