@@ -1,6 +1,6 @@
 :- module(util_stay_review, [generate_stay_review/3]).
 
-:- use_module(models_user, [user_email/2], [get_one/2]).
+:- use_module(models_user, [user_email/2, get_one/2]).
 :- use_module(models_reservation, [insert_review/1]).
 :- use_module(library(dcg/basics)).
 :- use_module(library(system)).
@@ -20,8 +20,9 @@ generate_stay_review(Conn, Reservation, User) :-
     date_time_value(hour, DateTime, Hour),
     date_time_value(minute, DateTime, Minute),
     date_time_value(second, DateTime, Second),
-    get_one(UserData, User.email),
-    insert_review(Reservation.id, Rating, Comments, datetime(Year, Month, Day, Hour, Minute, Second), User.email).
+    user_email(UserData, User.email),
+    insert_review(Conn, Reservation.id, Rating, Comments, Year, Month, Day, Hour, Minute, Second, User.email).
+
     
     
     
