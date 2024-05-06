@@ -4,6 +4,7 @@
 :- use_module("./roomMenu.pl").
 :- use_module("./reviewMenu.pl").
 :- use_module("../ClientMenus/chatMenu.pl").
+:- use_module("./serviceMenu.pl").
 
 option("1", _):-
   tty_clear,
@@ -16,7 +17,8 @@ option("2", User):-
 
 option("3", _):-
   tty_clear,
-  write("Services menu here").
+  write("Services menu here"),
+  service_menu(User).
 
 option("4", User):-
   chatMenu(User).
