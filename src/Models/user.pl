@@ -1,4 +1,4 @@
-:- module(models_user, [create_user_table/0, get_all/1, insert/8, get_one_user/2]).
+:- module(models_user, [create_user_table/0, get_all/1, insert/8, get_one_user/2, set_block_user/3]).
 
 :- use_module("../database.pl").
 :- use_module(library(prosqlite)).
@@ -44,3 +44,18 @@ insert(Email, FName, LName, Pass, Active, BlockR, Role, Row):-
                      VALUES('~w', '~w', '~w', '~w', ~w, '~w', '~w')",
                      [Email, FName, LName, Pass, Active, BlockR, Role]),
   sqlite_query(Conn,SQL, Row).
+
+set_block_user(Email, Reason, IsActive) :-
+  get_db_connection(Conn),
+  findall(
+      SQLFragment,
+      (
+      (nonvar(Email), format(atom(SQLFragment), "email= '~w'", [Email]));
+      (nonvar(Reason), format(atom(SQLFragment), "block_reason = '~w'", [Reason]));
+      (nonvar(IsActive), format(atom(SQLFragment), "is_active = ~w", [IsActive]))
+      ),
+      SQLFragments
+  ),
+  atomic_list_concat(SQLFragments, ', ', SQLSetClause),
+  format(atom(SQL), "UPDATE user SET ~w WHERE email = '~w'", [SQLSetClause, Email]),
+  sqlite_query(Conn, SQL, _).

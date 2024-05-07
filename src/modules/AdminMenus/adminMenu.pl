@@ -5,6 +5,7 @@
 :- use_module("./reviewMenu.pl").
 :- use_module("../ClientMenus/chatMenu.pl").
 :- use_module("./serviceMenu.pl").
+:- use_module("./blockMenu.pl").
 
 option("1", _):-
   tty_clear,
@@ -27,7 +28,12 @@ option("5", User):-
   tty_clear,
   review_menu(User).
 
+
 option("6", _):-
+  tty_clear,
+  block_menu().
+
+option("7", _):-
   tty_clear,
   exit().
 
@@ -39,7 +45,8 @@ admin_menu(User) :-
   write('3. Services\n'),
   write('4. Chat\n'),
   write('5. Hotel Review\n'),
-  write('6. exit - Quit the program\n'),
+  write('6. Block User\n'),
+  write('7. exit - Quit the program\n'),
   write('Enter a command: '), read_string(user_input, '\n', '\r', _, Option),
   option(Option, User),
   admin_menu(User)
