@@ -55,6 +55,9 @@ option(_):-true.
 
 loginLoop():-
     tty_clear,
+    write("╔══════════════════════════════════════════════════════════════════════════════╗\n"),
+    write("║                      WELCOME TO OURHOTEL, ENJOY YOUR STAY!                   ║\n"),
+    write("╚══════════════════════════════════════════════════════════════════════════════╝\n"),
     write("\nAvailable commands:\n"),
     write("1.  Login\n"),
     write("2.  Register\n"),
