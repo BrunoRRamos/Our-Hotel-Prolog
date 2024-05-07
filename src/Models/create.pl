@@ -8,6 +8,7 @@
 :- use_module("./room.pl").
 :- use_module("./reservation.pl").
 :- use_module("./message.pl").
+:- use_module("./review.pl").
 
 create_default_adm:-
   get_db_connection(Conn),
@@ -22,4 +23,5 @@ create_tables:-
   create_service_table,
   create_message_table,
   create_default_adm,
+  create_review_table,
   create_room_service_table.

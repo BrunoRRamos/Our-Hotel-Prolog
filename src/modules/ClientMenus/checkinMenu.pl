@@ -4,6 +4,7 @@
 :- use_module("./clientMenu.pl").
 :- use_module("./../login/loginMenu.pl").
 :- use_module("./../util/util.pl").
+:- use_module("./../util/stayReview.pl").
 
 getRoomStatusReserved(room(_, _, Status, _)):-
     Status == 'RESERVED'.
@@ -39,6 +40,7 @@ option("2"):-
     string_to_atom(ReservationId, Number),
     get_one_reservation(Reservation, ReservationId) -> 
     (
+        generate_stay_review(ReservationId),
         write("\nCheck-Out Done!\n"), 
         formatFreeRoom(Reservation),
         press_to_continue
